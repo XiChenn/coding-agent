@@ -6,7 +6,7 @@ import yaml
 from coding_agent.core.base_nodes import Node, BatchNode
 from coding_agent.logger import setup_logger
 from coding_agent.utils.llm_utils import call_llm
-from coding_agent.utils.file_utils import read_file, replace_file
+from coding_agent.tools.file_tools import read_file, replace_file
 
 # Configure logging
 logger = setup_logger("edit_nodes")
