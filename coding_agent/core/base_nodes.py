@@ -15,7 +15,7 @@ class BaseNode:
         self.params = params
         return self
 
-    def next(self, node: 'BaseNode', action: str = "default") -> 'BaseNode':
+    def to(self, node: 'BaseNode', action: str = "default") -> 'BaseNode':
         """Connect this node to a successor for the given action."""
         if action in self.successors:
             warnings.warn(f"Overwriting successor for action '{action}'")
@@ -47,14 +47,6 @@ class BaseNode:
             warnings.warn("Node won't run successors. Use Flow.")
         return self._run(shared)
 
-    def __rshift__(self, other: 'BaseNode') -> 'BaseNode':
-        return self.next(other)
-
-    def __sub__(self, action: str) -> '_ConditionalTransition':
-        if isinstance(action, str):
-            return _ConditionalTransition(self, action)
-        raise TypeError("Action must be a string")
-
     def __str__(self) -> str:
         """String representation of the node."""
         return f"{self.name}(successors={list(self.successors.keys())})"
@@ -62,23 +54,6 @@ class BaseNode:
     def __repr__(self) -> str:
         return self.__str__()
 
-
-class _ConditionalTransition:
-    """Internal class for handling conditional transitions between nodes."""
-    def __init__(self, src: 'BaseNode', action: str):
-        self.src = src
-        self.action = action
-
-    def __rshift__(self, tgt: 'BaseNode') -> 'BaseNode':
-        """Support for the >> operator to connect nodes with conditions."""
-        return self.src.next(tgt, self.action)
-
-    def __str__(self) -> str:
-        """String representation for debugging."""
-        return f"Transition({self.src.name} -[{self.action}]-> ?)"
-
-    def __repr__(self) -> str:
-        return self.__str__()
 
 class Node(BaseNode):
     """Node with retry capabilities."""

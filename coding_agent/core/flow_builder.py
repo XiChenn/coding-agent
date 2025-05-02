@@ -19,8 +19,8 @@ def create_edit_agent() -> Flow:
     apply_changes = ApplyChangesNode()
 
     # Connect nodes using default action (no named actions)
-    read_target >> analyze_plan
-    analyze_plan >> apply_changes
+    read_target.to(analyze_plan)
+    analyze_plan.to(apply_changes)
 
     # Create flow
     return Flow(start=read_target)
@@ -37,19 +37,19 @@ def create_main_flow() -> Flow:
     format_response = FormatResponseNode()
 
     # Connect main agent to action nodes
-    main_agent - "read_file" >> read_action
-    main_agent - "grep_search" >> grep_action
-    main_agent - "list_dir" >> list_dir_action
-    main_agent - "delete_file" >> delete_action
-    main_agent - "edit_file" >> edit_agent
-    main_agent - "finish" >> format_response
+    main_agent.to(read_action, "read_file")
+    main_agent.to(grep_action, "grep_search")
+    main_agent.to(list_dir_action, "list_dir")
+    main_agent.to(delete_action, "delete_file")
+    main_agent.to(edit_agent, "edit_file")
+    main_agent.to(format_response, "finish")
 
     # Connect action nodes back to main agent using default action
-    read_action >> main_agent
-    grep_action >> main_agent
-    list_dir_action >> main_agent
-    delete_action >> main_agent
-    edit_agent >> main_agent
+    read_action.to(main_agent)
+    grep_action.to(main_agent)
+    list_dir_action.to(main_agent)
+    delete_action.to(main_agent)
+    edit_agent.to(main_agent)
 
     # Create flow
     return Flow(start=main_agent)
