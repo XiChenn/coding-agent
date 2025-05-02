@@ -1,9 +1,10 @@
-from anthropic import AnthropicVertex
-import os
 import json
+import os
+
+from anthropic import AnthropicVertex
 
 from coding_agent.config import ANTHROPIC_REGION, ANTHROPIC_PROJECT_ID, \
-    ANTHROPIC_MODEL, LOG_DIR, CACHE_FILE
+    ANTHROPIC_MODEL, CACHE_FILE
 from coding_agent.logger import setup_logger
 
 # Configure logging

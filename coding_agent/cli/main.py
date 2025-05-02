@@ -1,6 +1,6 @@
 import os
 import argparse
-from coding_agent.flow import coding_agent_flow
+from coding_agent.core.flow_builder import coding_agent_flow
 from coding_agent.logger import setup_logger
 
 # Set up logging

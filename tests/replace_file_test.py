@@ -3,51 +3,6 @@ from typing import Tuple
 from coding_agent.utils.remove_file import remove_file
 from coding_agent.utils.insert_file import insert_file
 
-def replace_file(target_file: str, start_line: int, end_line: int, content: str) -> Tuple[str, bool]:
-    """
-    Replace content in a file between specified line numbers.
-    
-    Args:
-        target_file: Path to the file to modify
-        start_line: Starting line number to replace (1-indexed)
-        end_line: Ending line number to replace (1-indexed, inclusive)
-        content: The new content to replace the specified lines with
-    
-    Returns:
-        Tuple of (result message, success status)
-    """
-
-    try:
-        # Check if file exists
-        if not os.path.exists(target_file):
-            return f"Error: File {target_file} does not exist", False
-        
-        # Validate line numbers
-        if start_line < 1:
-            return "Error: start_line must be at least 1", False
-        
-        if end_line < 1:
-            return "Error: end_line must be at least 1", False
-        
-        if start_line > end_line:
-            return "Error: start_line must be less than or equal to end_line", False
-        
-        # First, remove the specified lines
-        remove_result, remove_success = remove_file(target_file, start_line, end_line)
-        
-        if not remove_success:
-            return f"Error during remove step: {remove_result}", False
-        
-        # Then, insert the new content at the start line
-        insert_result, insert_success = insert_file(target_file, content, start_line)
-        
-        if not insert_success:
-            return f"Error during insert step: {insert_result}", False
-        
-        return f"Successfully replaced lines {start_line} to {end_line} in {target_file}", True
-        
-    except Exception as e:
-        return f"Error replacing content: {str(e)}", False
 
 if __name__ == "__main__":
     # Test replace_file with a temporary file
