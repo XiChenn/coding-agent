@@ -1,19 +1,10 @@
 import os
 import argparse
-import logging
-from flow import coding_agent_flow
+from coding_agent.flow import coding_agent_flow
+from coding_agent.logger import setup_logger
 
 # Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('coding_agent.log')
-    ]
-)
-
-logger = logging.getLogger('main')
+logger = setup_logger('main')
 
 
 def main():

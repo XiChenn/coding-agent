@@ -1,29 +1,21 @@
 from agent_engine import Node, Flow, BatchNode
 import os
 import yaml  # Add YAML support
-import logging
 from datetime import datetime
 from typing import List, Dict, Any, Tuple
 
-# Import utility functions
-from utils.call_llm import call_llm
-from utils.read_file import read_file
-from utils.delete_file import delete_file
-from utils.replace_file import replace_file
-from utils.search_ops import grep_search
-from utils.dir_ops import list_dir
+from coding_agent.logger import setup_logger
 
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler('coding_agent.log')
-    ]
-)
-logging.getLogger("httpx").setLevel(logging.WARNING)
-logger = logging.getLogger('coding_agent')
+# Import utility functions
+from coding_agent.utils import call_llm
+from coding_agent.utils import read_file
+from coding_agent.utils import delete_file
+from coding_agent.utils import replace_file
+from coding_agent.utils.dir_ops import list_dir
+from coding_agent.utils.search_ops import grep_search
+
+# Configure logging
+logger = setup_logger("coding_agent")
 
 
 def format_history_summary(history: List[Dict[str, Any]]) -> str:

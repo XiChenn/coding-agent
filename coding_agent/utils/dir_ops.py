@@ -104,7 +104,7 @@ def list_dir(relative_workspace_path: str) -> Tuple[bool, str]:
 
 if __name__ == "__main__":
     # Test the list_dir function
-    success, tree_str = list_dir("..")
+    success, tree_str = list_dir("../..")
     print(f"Directory listing success: {success}")
     
     # Print tree visualization

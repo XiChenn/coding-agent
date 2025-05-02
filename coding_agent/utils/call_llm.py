@@ -1,23 +1,16 @@
 from anthropic import AnthropicVertex
 import os
-import logging
 import json
-from datetime import datetime
+
+from coding_agent.config import ANTHROPIC_REGION, ANTHROPIC_PROJECT_ID, \
+    ANTHROPIC_MODEL, LOG_DIR, CACHE_FILE
+from coding_agent.logger import setup_logger
 
 # Configure logging
-log_directory = os.getenv("LOG_DIR", "logs")
-os.makedirs(log_directory, exist_ok=True)
-log_file = os.path.join(log_directory, f"llm_calls_{datetime.now().strftime('%Y%m%d')}.log")
-
-# Set up logger
-logger = logging.getLogger("llm_logger")
-logger.setLevel(logging.INFO)
-file_handler = logging.FileHandler(log_file)
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(file_handler)
+logger = setup_logger("llm_calls")
 
 # Simple cache configuration
-cache_file = "llm_cache.json"
+cache_file = CACHE_FILE
 
 # Learn more about calling the LLM: https://the-pocket.github.io/PocketFlow/utility_function/llm.html
 def call_llm(prompt: str, use_cache: bool = True) -> str:
@@ -42,8 +35,8 @@ def call_llm(prompt: str, use_cache: bool = True) -> str:
     
     # Call the LLM if not in cache or cache disabled
     client = AnthropicVertex(
-        region=os.getenv("ANTHROPIC_REGION", "us-east5"),
-        project_id=os.getenv("ANTHROPIC_PROJECT_ID", "your-project-id")
+        region=ANTHROPIC_REGION,
+        project_id=ANTHROPIC_PROJECT_ID
     )
     response = client.messages.create(
         max_tokens=20000,
@@ -52,7 +45,7 @@ def call_llm(prompt: str, use_cache: bool = True) -> str:
             "budget_tokens": 16000
         },
         messages=[{"role": "user", "content": prompt}],
-        model="claude-3-7-sonnet@20250219"
+        model=ANTHROPIC_MODEL
     )
     response_text = response.content[1].text
     
