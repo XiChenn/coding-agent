@@ -88,7 +88,7 @@ class GrepSearchAction(Node):
         }
 
     def exec(self, params: Dict[str, Any]) -> tuple[list[dict[str, Any]], bool]:
-        # Use current directory if not specified
+        # Use the current directory if not specified
         working_dir = params.pop("working_dir", "")
 
         # Call grep_search utility which returns (success, matches)
