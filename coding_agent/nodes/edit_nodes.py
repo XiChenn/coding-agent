@@ -7,6 +7,7 @@ from coding_agent.core.flow_foundation import Node, BatchNode
 from coding_agent.logger import setup_logger
 from coding_agent.utils.llm_utils import call_llm
 from coding_agent.tools.file_tools import read_file, replace_file
+from coding_agent.utils.prompts import generate_analyze_and_plan_prompt
 
 # Configure logging
 logger = setup_logger("edit_nodes")
@@ -87,56 +88,8 @@ class AnalyzeAndPlanNode(Node):
         total_lines = len(file_lines)
 
         # Generate a prompt for the LLM to analyze the edit using YAML instead of JSON
-        prompt = f"""
-As a code editing assistant, I need to convert the following code edit instruction 
-and code edit pattern into specific edit operations (start_line, end_line, replacement).
+        prompt = generate_analyze_and_plan_prompt(file_content, instructions, code_edit)
 
-FILE CONTENT:
-{file_content}
-
-EDIT INSTRUCTIONS: 
-{instructions}
-
-CODE EDIT PATTERN (markers like "// ... existing code ..." indicate unchanged code):
-{code_edit}
-
-Analyze the file content and the edit pattern to determine exactly where changes should be made. 
-Be very careful with start and end lines. They are 1-indexed and inclusive. These will be REPLACED, not APPENDED!
-If you want APPEND, just copy that line as the first line of the replacement.
-Return a YAML object with your reasoning and an array of edit operations:
-
-```yaml
-reasoning: |
-  First explain your thinking process about how you're interpreting the edit pattern.
-  Explain how you identified where the edits should be made in the original file.
-  Describe any assumptions or decisions you made when determining the edit locations. 
-  You need to be very precise with the start and end lines! Reason why not 1 line before or after the start and end lines.
-
-operations:
-  - start_line: 10
-    end_line: 15
-    replacement: |
-      def process_file(filename):
-          # New implementation with better error handling
-          try:
-              with open(filename, 'r') as f:
-                  return f.read()
-          except FileNotFoundError:
-              return None
-
-  - start_line: 25
-    end_line: 25
-    replacement: |
-      logger.info("File processing completed")
-```
-
-For lines that include "// ... existing code ...", do not include them in the replacement.
-Instead, identify the exact lines they represent in the original file and set the line 
-numbers accordingly. Start_line and end_line are 1-indexed.
-
-If the instruction indicates content should be appended to the file, set both start_line and end_line 
-to the maximum line number + 1, which will add the content at the end of the file.
-"""
 
         # Call LLM to analyze
         response = call_llm(prompt)
