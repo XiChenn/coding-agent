@@ -2,7 +2,7 @@ import os
 
 from typing import List, Dict, Any, Tuple
 
-from coding_agent.core.base_nodes import Node
+from coding_agent.core.flow_foundation import Node
 from coding_agent.logger import setup_logger
 from coding_agent.tools.file_tools import delete_file, list_dir, read_file
 from coding_agent.tools.search_tools import grep_search

@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 
-from coding_agent.core.base_nodes import Node
+from coding_agent.core.flow_foundation import Node
 from coding_agent.logger import setup_logger
 from coding_agent.utils.llm_utils import call_llm
 from coding_agent.utils.formatters import format_history_summary
